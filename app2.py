@@ -141,8 +141,8 @@ if 'texto_griego' in st.session_state:
 
     st.markdown("---")
     st.subheader("Compartir por WhatsApp:")
-    st.markdown(f'<a href="{enlace1}" target="_blank"><button style="background-color:#25D366;color:white;border:none;border-radius:5px;padding:10px;width:100%;">📤 Enviar Código</button></a>', unsafe_allow_html=True)
-    st.markdown(f'<a href="{enlace2}" target="_blank"><button style="background-color:#128C7E;color:white;border:none;border-radius:5px;padding:10px;width:100%;">🔗 Enlace para traducir</button></a>', unsafe_allow_html=True)
+    st.markdown(f'<a href="{enlace1}" target="_blank"><button style="background-color:#25D366;color:white;border:none;border-radius:5px;padding:10px;width:100%;">📤 1o Envía el código que generaste</button></a>', unsafe_allow_html=True)
+    st.markdown(f'<a href="{enlace2}" target="_blank"><button style="background-color:#128C7E;color:white;border:none;border-radius:5px;padding:10px;width:100%;">🔗 2o Envía el enlace para que lo puedan traducir</button></a>', unsafe_allow_html=True)
 
 if 'texto_traducido' in st.session_state:
     mensaje1 = f"Traducción del código:\nOriginal: {st.session_state.texto_griego_original}\nTraducción: {st.session_state.texto_traducido}"
