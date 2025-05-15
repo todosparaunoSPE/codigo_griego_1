@@ -134,7 +134,7 @@ else:
 
 # Mostrar botones de WhatsApp si hay contenido generado
 if 'texto_griego' in st.session_state:
-    mensaje1 = f"Código Griego generado:\n{st.session_state.texto_griego}"
+    mensaje1 = f"\n{st.session_state.texto_griego}"
     mensaje2 = "¿Quieres traducir este código? Ve a:\nhttps://codigo-griego.streamlit.app"
     enlace1 = crear_enlace_whatsapp(mensaje1)
     enlace2 = crear_enlace_whatsapp(mensaje2)
