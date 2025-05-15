@@ -7,30 +7,36 @@ Created on Mon May 12 18:24:05 2025
 
 import streamlit as st
 import urllib.parse
-import pyperclip
 
-# Mapeos de caracteres
+# Mapeo de letras griegas a español
 griego_a_espanol = {
-    'α': 'a', 'β': 'b', 'γ': 'g', 'δ': 'd', 'ε': 'e', 'ζ': 'z', 'η': 'h',
-    'θ': 'th', 'ι': 'i', 'κ': 'k', 'λ': 'l', 'μ': 'm', 'ν': 'n', 'ξ': 'x',
-    'ο': 'o', 'π': 'p', 'ρ': 'r', 'σ': 's', 'ς': 's', 'τ': 't', 'υ': 'y',
-    'φ': 'ph', 'χ': 'ch', 'ψ': 'ps', 'ω': 'w',
-    'Α': 'A', 'Β': 'B', 'Γ': 'G', 'Δ': 'D', 'Ε': 'E', 'Ζ': 'Z', 'Η': 'H',
-    'Θ': 'Th', 'Ι': 'I', 'Κ': 'K', 'Λ': 'L', 'Μ': 'M', 'Ν': 'N', 'Ξ': 'X',
-    'Ο': 'O', 'Π': 'P', 'Ρ': 'R', 'Σ': 'S', 'Τ': 'T', 'Υ': 'Y', 'Φ': 'Ph',
-    'Χ': 'Ch', 'Ψ': 'Ps', 'Ω': 'W'
+    'α': 'a', 'β': 'b', 'γ': 'g', 'δ': 'd', 'ε': 'e',
+    'ζ': 'z', 'η': 'h', 'θ': 'th', 'ι': 'i', 'κ': 'k',
+    'λ': 'l', 'μ': 'm', 'ν': 'n', 'ξ': 'x', 'ο': 'o',
+    'π': 'p', 'ρ': 'r', 'σ': 's', 'ς': 's', 'τ': 't',
+    'υ': 'y', 'φ': 'ph', 'χ': 'ch', 'ψ': 'ps', 'ω': 'w',
+    'Α': 'A', 'Β': 'B', 'Γ': 'G', 'Δ': 'D', 'Ε': 'E',
+    'Ζ': 'Z', 'Η': 'H', 'Θ': 'Th', 'Ι': 'I', 'Κ': 'K',
+    'Λ': 'L', 'Μ': 'M', 'Ν': 'N', 'Ξ': 'X', 'Ο': 'O',
+    'Π': 'P', 'Ρ': 'R', 'Σ': 'S', 'Τ': 'T', 'Υ': 'Y',
+    'Φ': 'Ph', 'Χ': 'Ch', 'Ψ': 'Ps', 'Ω': 'W'
 }
+
+# Mapeo inverso (español a griego)
 espanol_a_griego = {v: k for k, v in griego_a_espanol.items()}
 
 def traducir_griego_a_espanol(texto):
     resultado = []
     i = 0
-    while i < len(texto):
-        for l in [2, 1]:
-            if i + l <= len(texto) and texto[i:i+l] in griego_a_espanol:
-                resultado.append(griego_a_espanol[texto[i:i+l]])
-                i += l
-                break
+    n = len(texto)
+    while i < n:
+        for length in [2, 1]:
+            if i + length <= n:
+                substring = texto[i:i+length]
+                if substring in griego_a_espanol:
+                    resultado.append(griego_a_espanol[substring])
+                    i += length
+                    break
         else:
             resultado.append(texto[i])
             i += 1
@@ -39,46 +45,53 @@ def traducir_griego_a_espanol(texto):
 def traducir_espanol_a_griego(texto):
     resultado = []
     i = 0
-    while i < len(texto):
-        for l in [2, 1]:
-            substring = texto[i:i+l].lower()
-            if substring in espanol_a_griego:
-                traducido = espanol_a_griego[substring]
-                if texto[i:i+l].istitle():
-                    traducido = traducido.title()
-                elif texto[i:i+l].isupper():
-                    traducido = traducido.upper()
-                resultado.append(traducido)
-                i += l
-                break
+    n = len(texto)
+    while i < n:
+        for length in [2, 1]:
+            if i + length <= n:
+                substring = texto[i:i+length].lower()
+                if substring in espanol_a_griego:
+                    if texto[i:i+length].istitle():
+                        traducido = espanol_a_griego[substring].title()
+                    elif texto[i:i+length].isupper():
+                        traducido = espanol_a_griego[substring].upper()
+                    else:
+                        traducido = espanol_a_griego[substring]
+                    resultado.append(traducido)
+                    i += length
+                    break
         else:
             resultado.append(texto[i])
             i += 1
     return ''.join(resultado)
 
-def crear_enlaces_whatsapp(mensaje_1, mensaje_2):
-    mensaje_1_url = urllib.parse.quote(mensaje_1)
-    mensaje_2_url = urllib.parse.quote(mensaje_2)
-    enlace1 = f"https://wa.me/?text={mensaje_1_url}"
-    enlace2 = f"https://wa.me/?text={mensaje_2_url}"
-    return enlace1, enlace2
+def crear_enlace_whatsapp(mensaje):
+    texto_codificado = urllib.parse.quote(mensaje)
+    return f"https://wa.me/?text={texto_codificado}"
 
-# Sidebar
+# Configuración del sidebar
 with st.sidebar:
     st.title("Información")
     st.markdown("---")
     st.markdown("### Creado por:")
     st.markdown("**Javier Horacio Pérez Ricárdez**")
+    st.markdown("---")
     st.markdown("### Alfabeto Griego:")
-    st.write("Minúsculas: α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ/ς τ υ φ χ ψ ω")
-    st.write("Mayúsculas: Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω")
+    st.write("""
+    - **Minúsculas**: α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ/ς τ υ φ χ ψ ω  
+    - **Mayúsculas**: Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω
+    """)
+    st.markdown("---")
     st.markdown("### Instrucciones:")
-    st.write("1. Selecciona una opción\n2. Escribe tu texto\n3. Genera o traduce\n4. Copia y comparte por WhatsApp")
+    st.write("""
+    1. Selecciona la operación deseada  
+    2. Introduce tu texto  
+    3. Haz clic en el botón correspondiente  
+    4. Copia el texto generado  
+    5. Comparte por WhatsApp  
+    """)
 
-# Estado inicial
-if 'copied' not in st.session_state:
-    st.session_state.copied = False
-
+# Configuración de la app principal
 st.title("🔠 Generador y Traductor de Código Griego")
 
 opcion = st.radio("Selecciona una opción:", 
@@ -86,54 +99,62 @@ opcion = st.radio("Selecciona una opción:",
                  horizontal=True)
 
 if opcion == "Generar código griego":
-    texto_original = st.text_area("Texto en español:", height=150, placeholder="Escribe tu texto...")
+    texto_original = st.text_area("Introduce el texto en español para convertir a griego:", 
+                                  height=150, 
+                                  placeholder="Escribe aquí tu texto en español...")
+
     if st.button("Generar Código Griego", type="primary"):
         if texto_original:
             texto_griego = traducir_espanol_a_griego(texto_original)
             st.subheader("Resultado:")
             st.code(texto_griego, language=None)
+            st.text_area("Copia el código manualmente:", texto_griego, height=100)
             
-            st.session_state.texto_a_copiar = texto_griego
-            st.session_state.mensaje_whatsapp1 = f"\n{texto_griego}"
-            st.session_state.mensaje_whatsapp2 = "Traduce este código en: https://tuapp.streamlit.app"
-            st.session_state.copied = False
+            # Guardar en session_state para WhatsApp
+            st.session_state.texto_griego = texto_griego
         else:
-            st.warning("Introduce texto para generar el código.")
+            st.warning("Por favor introduce un texto para generar el código griego.")
 else:
-    texto_griego = st.text_area("Texto en griego:", height=150, placeholder="Escribe tu texto griego...")
+    texto_griego = st.text_area("Introduce el código en griego para traducir a español:", 
+                                height=150, 
+                                placeholder="Escribe aquí tu texto en griego...")
+
     if st.button("Traducir a Español", type="primary"):
         if texto_griego:
             texto_traducido = traducir_griego_a_espanol(texto_griego)
             st.subheader("Resultado:")
             st.code(texto_traducido, language=None)
+            st.text_area("Copia la traducción manualmente:", texto_traducido, height=100)
             
-            st.session_state.texto_a_copiar = texto_traducido
-            st.session_state.mensaje_whatsapp1 = f"Texto traducido:\n{texto_traducido}"
-            st.session_state.mensaje_whatsapp2 = "¿Quieres traducir más? Visita: https://tuapp.streamlit.app"
-            st.session_state.copied = False
+            # Guardar en session_state para WhatsApp
+            st.session_state.texto_traducido = texto_traducido
+            st.session_state.texto_griego_original = texto_griego
         else:
-            st.warning("Introduce texto en griego para traducir.")
+            st.warning("Por favor introduce un código en griego para traducir.")
 
-# Mostrar botón para copiar y compartir
-if 'texto_a_copiar' in st.session_state:
-    if st.button("📋 Copiar al Portapapeles"):
-        pyperclip.copy(st.session_state.texto_a_copiar)
-        st.session_state.copied = True
-        st.success("¡Texto copiado!")
+# Mostrar botones de WhatsApp si hay contenido generado
+if 'texto_griego' in st.session_state:
+    mensaje1 = f"Código Griego generado:\n{st.session_state.texto_griego}"
+    mensaje2 = "¿Quieres traducir este código? Ve a:\nhttps://codigo-griego.streamlit.app"
+    enlace1 = crear_enlace_whatsapp(mensaje1)
+    enlace2 = crear_enlace_whatsapp(mensaje2)
 
-    if st.session_state.copied:
-        enlace1, enlace2 = crear_enlaces_whatsapp(
-            st.session_state.mensaje_whatsapp1,
-            st.session_state.mensaje_whatsapp2
-        )
+    st.markdown("---")
+    st.subheader("Compartir por WhatsApp:")
+    st.markdown(f'<a href="{enlace1}" target="_blank"><button style="background-color:#25D366;color:white;border:none;border-radius:5px;padding:10px;width:100%;">📤 Enviar Código</button></a>', unsafe_allow_html=True)
+    st.markdown(f'<a href="{enlace2}" target="_blank"><button style="background-color:#128C7E;color:white;border:none;border-radius:5px;padding:10px;width:100%;">🔗 Enlace para traducir</button></a>', unsafe_allow_html=True)
 
-        st.markdown("### Compartir en WhatsApp:")
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown(f'<a href="{enlace1}" target="_blank"><button style="background-color:#25D366;color:white;border-radius:5px;padding:10px;width:100%">1️⃣ Código</button></a>', unsafe_allow_html=True)
-        with col2:
-            st.markdown(f'<a href="{enlace2}" target="_blank"><button style="background-color:#128C7E;color:white;border-radius:5px;padding:10px;width:100%">2️⃣ Enlace</button></a>', unsafe_allow_html=True)
+if 'texto_traducido' in st.session_state:
+    mensaje1 = f"Traducción del código:\nOriginal: {st.session_state.texto_griego_original}\nTraducción: {st.session_state.texto_traducido}"
+    mensaje2 = "¿Quieres generar o traducir código griego?\nhttps://codigo-griego.streamlit.app"
+    enlace1 = crear_enlace_whatsapp(mensaje1)
+    enlace2 = crear_enlace_whatsapp(mensaje2)
 
-# Footer
+    st.markdown("---")
+    st.subheader("Compartir por WhatsApp:")
+    st.markdown(f'<a href="{enlace1}" target="_blank"><button style="background-color:#25D366;color:white;border:none;border-radius:5px;padding:10px;width:100%;">📤 Enviar Traducción</button></a>', unsafe_allow_html=True)
+    st.markdown(f'<a href="{enlace2}" target="_blank"><button style="background-color:#128C7E;color:white;border:none;border-radius:5px;padding:10px;width:100%;">🔗 Enlace para generar/traducir</button></a>', unsafe_allow_html=True)
+
+# Pie de página
 st.markdown("---")
 st.caption("Aplicación creada por Javier Horacio Pérez Ricárdez - Generador y traductor de código griego")
