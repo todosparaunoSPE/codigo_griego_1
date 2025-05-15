@@ -92,7 +92,7 @@ with st.sidebar:
     """)
 
 # Configuración de la app principal
-st.title("🔠 Generador y Traductor de Código Griego")
+st.title("🔠 Secreto griego: Generador y Traductor de Código Griego")
 
 opcion = st.radio("Selecciona una opción:", 
                  ("Generar código griego", "Traducir código griego a español"),
@@ -157,4 +157,4 @@ if 'texto_traducido' in st.session_state:
 
 # Pie de página
 st.markdown("---")
-st.caption("Aplicación creada por Javier Horacio Pérez Ricárdez - Generador y traductor de código griego")
+st.caption("Aplicación creada por Javier Horacio Pérez Ricárdez - Secreto griego: Generador y traductor de código griego")
